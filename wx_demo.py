@@ -19,14 +19,11 @@
 ## THE SOFTWARE.
 
 import enthought.traits.api as traits
-from enthought.traits.ui.api import View, Item, Group, Handler, HGroup, \
-     VGroup, RangeEditor
+from enthought.traits.ui.api import View, Item, Group
 import wx
-from enthought.enable2.wx_backend.api import Window # tells enthought.traits.ui.api to use wx?
 import remote_traits
 
-import os, time, sys
-import Pyro, Pyro.core
+import time, sys
 
 class Camera(remote_traits.MaybeRemoteHasTraits):
     shutter = traits.Range(0.0, 10.0, 4.5)

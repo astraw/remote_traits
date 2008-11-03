@@ -20,7 +20,7 @@
 
 import enthought.traits.api as traits
 
-import os, time, sys
+import os, sys
 import Pyro, Pyro.core
 
 Pyro.config.PYRO_MULTITHREADED = 0 # We do the multithreading around here...
