@@ -67,6 +67,9 @@ class RemoteAPI(Pyro.core.ObjBase):
         for n in instance.trait_names():
             if n in reserved_trait_names:
                 continue
+            if instance.traits()[n].type == 'event':
+                # events are write-only (XXX how to check for other write only?)
+                continue
             initial_value_dict[n]=getattr(instance,n)
 
         return klass, initial_value_dict, callback_id
