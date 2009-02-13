@@ -43,12 +43,20 @@ class Sender:
 
 class RemoteAPI(Pyro.core.ObjBase):
     def __init__(self,*args,**kwds):
+        if 'key' in kwds:
+            self._key = kwds['key']
+            del kwds['key']
+        else:
+            self._key = None
         Pyro.core.ObjBase.__init__(self,*args,**kwds)
         self._remote_pyro_cache = {}
         self._server = None
         self._name_obj_dict = {}
         self._strongrefs = [] # prevent garbage collection
         self._ids2objs = {}
+
+    def get_key(self):
+        return self._key
 
     def _local_set_server(self,server):
         self._server=server
@@ -95,12 +103,13 @@ class RemoteAPI(Pyro.core.ObjBase):
         setattr( traited_object, 'send_over_net', True)
 
 class ServerObj(object):
-    def __init__(self,hostname,port):
+    def __init__(self,hostname,port,key=None):
         Pyro.core.initServer(banner=0)
         self._hostname = hostname
         self._port = port
         self._daemon = Pyro.core.Daemon(host=self._hostname,port=self._port)
-        self._local_api = RemoteAPI()
+        self._key = key
+        self._local_api = RemoteAPI(key=self._key)
         self._local_api._local_set_server(self)
         self._remote_apis = {}
         self._strongrefs = [] # prevent garbage collection
@@ -124,8 +133,14 @@ class ServerObj(object):
             self._connect(remote_hostname,remote_port)
         return self._remote_apis[remote_id]
 
-    def get_proxy_hastraits_instance(self,remote_hostname,remote_port,name):
+    def get_proxy_hastraits_instance(self,remote_hostname,remote_port,name,key=None):
         remote_api=self.get_remote_api(remote_hostname,remote_port)
+        if key is not None:
+            remote_key = remote_api.get_key()
+            assert key == remote_key
+        if self._key is not None:
+            remote_key = remote_api.get_key()
+            assert self._key == remote_key
         klass, val_dict, remote_callback_id = remote_api.get_clone_info(name)
         local_clone = klass(**val_dict)
 
