@@ -18,7 +18,11 @@
 ## OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ## THE SOFTWARE.
 
-import enthought.traits.api as traits
+try:
+    import enthought.traits.api as traits
+except ImportError:
+    # traits 4.x
+    import traits.api as traits
 
 import os, sys
 import Pyro, Pyro.core
