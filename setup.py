@@ -1,6 +1,6 @@
 from distutils.core import setup
 setup(name='remote_traits',
-      version='0.0.2+git',
+      version='0.1',
       description='use traits remotely',
       license='MIT',
       author='Andrew Straw',
